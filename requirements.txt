@@ -4,6 +4,6 @@ langchain-core
 langchain-text-splitters
 streamlit
 sentence-transformers
-faiss-cpu  # Or faiss-gpu if you have CUDA configured
 ollama
-PyPDF2 # Required by PyPDFLoader
+pypdf
+chromadb

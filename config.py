@@ -4,6 +4,7 @@ import os
 ROLES = ["staff", "hr", "manager"]
 # Define role hierarchy (higher number means more access)
 ROLE_HIERARCHY = {
+    "customer": 0,
     "staff": 1,
     "hr": 2,
     "manager": 3
@@ -22,12 +23,13 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 LLM_MODEL = "deepseek-r1:1.5b"
 
 # --- Ticket System Configuration ---
-TICKET_TEAMS = ["HR", "IT", "Product", "Legal", "General"]
+TICKET_TEAMS = ["Customer Support", "HR", "IT", "Product", "Legal", "General"]
 TICKET_DB_PATH = "database/tickets.db"
 FEEDBACK_DB_PATH = "database/feedback.db"
 
 # Simple keyword mapping for team suggestions
 TICKET_KEYWORD_MAP = {
+    "customer support": ["account", "order", "website", "login", "purchase", "service", "product issue", "billing"],
     "hr": ["payroll", "leave", "benefits", "hiring", "policy", "pto", "salary"],
     "it": ["laptop", "password", "software", "printer", "network", "login", "access", "computer", "wifi"],
     "product": ["feature", "roadmap", "sprint", "project", "omega", "update"],
