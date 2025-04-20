@@ -14,11 +14,11 @@ DOCS_FOLDER = "sample_docs"
 ALLOWED_EXTENSIONS = [".txt", ".pdf"]
 
 # --- RAG Configuration ---
-VECTOR_STORE_PATH = "vector_store_db"
+# Use a directory name for ChromaDB persistence
+PERSIST_DIRECTORY = "chroma_db"
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-# Make sure Ollama server is running and the model is pulled
 LLM_MODEL = "deepseek-r1:1.5b"
 
 # --- Ticket System Configuration ---
@@ -28,12 +28,14 @@ FEEDBACK_DB_PATH = "database/feedback.db"
 
 # Simple keyword mapping for team suggestions
 TICKET_KEYWORD_MAP = {
-    "hr": ["payroll", "leave", "benefits", "hiring", "policy", "pto"],
-    "it": ["laptop", "password", "software", "printer", "network", "login", "access"],
-    "product": ["feature", "roadmap", "sprint", "project", "omega"],
-    "legal": ["contract", "compliance", "nda"]
+    "hr": ["payroll", "leave", "benefits", "hiring", "policy", "pto", "salary"],
+    "it": ["laptop", "password", "software", "printer", "network", "login", "access", "computer", "wifi"],
+    "product": ["feature", "roadmap", "sprint", "project", "omega", "update"],
+    "legal": ["contract", "compliance", "nda", "agreement"]
 }
 
 # --- Create necessary directories ---
 os.makedirs(os.path.dirname(TICKET_DB_PATH), exist_ok=True)
 os.makedirs(os.path.dirname(FEEDBACK_DB_PATH), exist_ok=True)
+# Chroma will create its own directory if needed, but ensure parent exists if nested deeper
+# os.makedirs(PERSIST_DIRECTORY, exist_ok=True) # Chroma handles its own directory creation
