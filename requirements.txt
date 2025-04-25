@@ -1,9 +1,11 @@
+# requirements.txt
 langchain
 langchain-community
 langchain-core
 langchain-text-splitters
 streamlit
 sentence-transformers
-faiss-cpu  # Or faiss-gpu if you have CUDA configured
 ollama
-PyPDF2 # Required by PyPDFLoader
+pypdf # For PyPDFLoader
+chromadb # For Chroma vector store
+# Note: faiss-cpu is no longer required
