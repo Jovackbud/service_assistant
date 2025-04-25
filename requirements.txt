@@ -1,0 +1,11 @@
+# requirements.txt
+langchain
+langchain-community
+langchain-core
+langchain-text-splitters
+streamlit
+sentence-transformers
+ollama
+pypdf # For PyPDFLoader
+chromadb # For Chroma vector store
+# Note: faiss-cpu is no longer required
