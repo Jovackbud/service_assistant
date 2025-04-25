@@ -1,3 +1,4 @@
+# app.py
 import streamlit as st
 import time # For simulating typing effect
 
@@ -13,6 +14,8 @@ st.set_page_config(page_title="Internal Knowledge Assistant PoC", layout="wide")
 st.title("🤖 Company Knowledge Assistant PoC") # Broaden title slightly
 st.caption("Ask questions about company information, policies, and procedures.")
 
+# --- Initialize Database ---
+# (Done implicitly by importing database_utils)
 
 # --- Session State Initialization ---
 if 'user_role' not in st.session_state:
@@ -50,6 +53,8 @@ with st.sidebar:
              try:
                  st.session_state.rag_chain = get_rag_chain(st.session_state.user_role)
                  st.success(f"Role set to **{st.session_state.user_role}**. Assistant ready.")
+                 # Optional: Force rerun if essential for UI update, but avoid if possible
+                 # st.rerun()
              except Exception as e:
                   st.error(f"Error initializing assistant for this role: {e}")
                   st.session_state.rag_chain = None
@@ -57,6 +62,7 @@ with st.sidebar:
              st.error("Knowledge base not available.")
              st.session_state.rag_chain = None
 
+        # Rerun might be needed here to clear the main chat/form if state changes affect it
         st.rerun()
 
 
@@ -79,6 +85,7 @@ with st.sidebar:
 st.header("Chat Assistant")
 
 # Display chat history
+# ... (No changes needed in the history display loop itself) ...
 for i, message in enumerate(st.session_state.chat_history):
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
@@ -116,6 +123,8 @@ for i, message in enumerate(st.session_state.chat_history):
 chat_input_disabled = not st.session_state.user_role or not st.session_state.rag_chain
 if prompt := st.chat_input("Ask a question...", disabled=chat_input_disabled, key="chat_input"):
     st.session_state.last_question = prompt
+    # Don't hide ticket form immediately, only if a successful answer comes back maybe?
+    # Or hide it always on new question. Let's keep hide always.
     st.session_state.show_ticket_form = False
 
     st.session_state.chat_history.append({"role": "user", "content": prompt})
@@ -150,6 +159,7 @@ if prompt := st.chat_input("Ask a question...", disabled=chat_input_disabled, ke
             print(f"Error during RAG chain invocation: {e}")
 
 
+        # --- Ticket Trigger Logic --- (No changes needed, uses same failure phrases)
         offer_ticket = False
         response_lower = full_response.lower()
         failure_phrases = [
@@ -158,7 +168,7 @@ if prompt := st.chat_input("Ask a question...", disabled=chat_input_disabled, ke
             "unable to find information", "cannot find information",
             "no relevant documents found", "no relevant documents were found or accessible",
             "knowledge base is currently unavailable", "rag system could not be initialized",
-            "error: invalid role"
+            "error: invalid role" # Added check for invalid role message
         ]
 
         if any(phrase in response_lower for phrase in failure_phrases):
@@ -177,6 +187,7 @@ if prompt := st.chat_input("Ask a question...", disabled=chat_input_disabled, ke
             "feedback": {"show": True, "rating": None}
         })
 
+        # Rerun to show feedback buttons / ticket form if needed
         st.rerun()
 
 
@@ -193,6 +204,7 @@ if st.session_state.get("show_ticket_form", False):
     except ValueError:
         default_index = TICKET_TEAMS.index("General") if "General" in TICKET_TEAMS else 0
 
+    # Present available teams (already includes 'Customer Support' from config)
     selected_team = st.selectbox(
         "Select the most relevant team:",
         options=TICKET_TEAMS,
